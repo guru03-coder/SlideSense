@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlideSense - Student Dashboard | Sairam College</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <script>
+        const API_BASE = 'http://localhost:5000/api/student';
+        
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuthentication();
+        });
+
+        function checkAuthentication() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated');
+            const userType = localStorage.getItem('userType');
+            
+            if (isAuthenticated !== 'true' || userType !== 'student') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Get roll number from localStorage
+            const rollNumber = localStorage.getItem('rollNumber');
+            if (rollNumber) {
+                window.STUDENT_ROLL = rollNumber;
+            } else {
+                window.STUDENT_ROLL = '21CS001'; // Fallback
+            }
+            
+            // Display user name if available
+            const userName = localStorage.getItem('userName');
+            if (userName) {
+                const headerTitle = document.querySelector('header h1');
+                if (headerTitle) {
+                    headerTitle.textContent = `Student Dashboard - ${userName}`;
+                }
+            }
+        }
+        
+        // Make STUDENT_ROLL available globally - will be set after authentication check
+        let STUDENT_ROLL = '21CS001';
+        
+        // Update STUDENT_ROLL after authentication check
+        window.addEventListener('DOMContentLoaded', () => {
+            const rollNumber = localStorage.getItem('rollNumber');
+            if (rollNumber) {
+                STUDENT_ROLL = rollNumber;
+                window.STUDENT_ROLL = rollNumber;
+            }
+        });
+    </script>
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 rounded-xl p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-gray-900 text-2xl font-medium">SlideSense - Student Dashboard</h1>
+                    <p class="text-gray-500 text-sm">Sairam College of Engineering</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="handleLogout()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 text-gray-600 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                        <path d="m16 17 5-5-5-5"></path>
+                        <path d="M21 12H9"></path>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" id="student-stats">
+            <!-- Will be loaded dynamically -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mb-8">
+            <button onclick="openUploadModal()" class="flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-blue-600 text-white shadow-lg hover:bg-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload New PPT
+            </button>
+            <button onclick="viewMySubmissions()" class="flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-white text-gray-600 hover:bg-gray-50 border border-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                    <path d="M10 9H8"></path>
+                    <path d="M16 13H8"></path>
+                    <path d="M16 17H8"></path>
+                </svg>
+                My Submissions
+            </button>
+            <button onclick="viewGuidelines()" class="flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-white text-gray-600 hover:bg-gray-50 border border-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 16v-4"></path>
+                    <path d="M12 8h.01"></path>
+                </svg>
+                Guidelines
+            </button>
+        </div>
+
+        <!-- My Submissions -->
+        <div id="submissions-section">
+            <div class="mb-8">
+                <h2 class="text-gray-900 text-2xl font-medium mb-2">My Presentations</h2>
+                <p class="text-gray-600">Track your submission status and scores</p>
+            </div>
+
+            <div id="my-presentations-list" class="space-y-4">
+                <!-- Will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 max-w-2xl w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-medium">Upload New Presentation</h3>
+                <button onclick="closeModal('upload-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleUpload(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Presentation File</label>
+                    <input type="file" id="ppt-file" accept=".pptx,.ppt" required class="w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Presentation Title</label>
+                    <input type="text" id="ppt-title" placeholder="e.g., AI_Machine_Learning_Presentation" required class="w-full border border-gray-300 rounded-md p-2">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Department</label>
+                        <select id="ppt-dept" required class="w-full border border-gray-300 rounded-md p-2">
+                            <option value="CSE">CSE</option>
+                            <option value="EEE">EEE</option>
+                            <option value="MECH">MECH</option>
+                            <option value="CIVIL">CIVIL</option>
+                            <option value="PHYSICS">PHYSICS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Number of Slides</label>
+                        <input type="number" id="ppt-slides" min="1" required class="w-full border border-gray-300 rounded-md p-2">
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700">Upload</button>
+                    <button type="button" onclick="closeModal('upload-modal')" class="flex-1 bg-gray-200 text-gray-700 rounded-md py-2 hover:bg-gray-300">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Analysis Modal -->
+    <div id="analysis-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-medium">AI Analysis Report</h3>
+                <button onclick="closeModal('analysis-modal')" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <div id="analysis-content"></div>
+        </div>
+    </div>
+
+    <!-- Help Button -->
+    <button onclick="showHelp()" class="fixed bottom-8 right-8 bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-800 transition-colors text-xl font-medium">
+        ?
+    </button>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudentStats();
+            loadMyPresentations();
+        });
+
+        // API Functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (data) options.body = JSON.stringify(data);
+                
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                alert('Error connecting to server. Make sure backend is running on port 5000.');
+                return null;
+            }
+        }
+
+        async function loadStudentStats() {
+            const rollNumber = localStorage.getItem('rollNumber') || STUDENT_ROLL;
+            const stats = await apiCall(`/stats?rollNumber=${rollNumber}`);
+            if (!stats) return;
+            
+            document.getElementById('student-stats').innerHTML = `
+                <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-blue-600 text-sm mb-1">Total Submissions</p>
+                            <p class="text-blue-900 text-4xl font-medium">${stats.total}</p>
+                        </div>
+                        <div class="bg-blue-100 rounded-xl p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600">
+                                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-yellow-50 rounded-2xl p-6 border border-yellow-100">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-yellow-700 text-sm mb-1">Pending Review</p>
+                            <p class="text-yellow-900 text-4xl font-medium">${stats.pending}</p>
+                        </div>
+                        <div class="bg-yellow-100 rounded-xl p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-yellow-600">
+                                <path d="M12 6v6l4 2"></path>
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-green-50 rounded-2xl p-6 border border-green-100">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-green-600 text-sm mb-1">Approved</p>
+                            <p class="text-green-900 text-4xl font-medium">${stats.approved}</p>
+                        </div>
+                        <div class="bg-green-100 rounded-xl p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-600">
+                                <path d="M21.801 10A10 10 0 0 1 1 17 3.335"></path>
+                                <path d="m9 11 3 3L22 4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-purple-50 rounded-2xl p-6 border border-purple-100">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-purple-600 text-sm mb-1">Average Score</p>
+                            <p class="text-purple-900 text-4xl font-medium">${stats.averageScore}%</p>
+                        </div>
+                        <div class="bg-purple-100 rounded-xl p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-purple-600">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadMyPresentations() {
+            const rollNumber = localStorage.getItem('rollNumber') || STUDENT_ROLL;
+            const presentations = await apiCall(`/presentations?rollNumber=${rollNumber}`);
+            if (!presentations) return;
+            
+            const container = document.getElementById('my-presentations-list');
+            
+            if (presentations.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-gray-500">No submissions yet. Click "Upload New PPT" to get started!</div>';
+                return;
+            }
+            
+            container.innerHTML = presentations.map(p => {
+                const statusConfig = {
+                    approved: { badge: 'bg-green-100 text-green-700', label: '✓ Approved', scoreBg: 'bg-green-500', progressBg: 'bg-green-600' },
+                    pending: { badge: 'bg-yellow-100 text-yellow-700', label: '⏱ Pending', scoreBg: 'bg-blue-500', progressBg: 'bg-blue-600' },
+                    rejected: { badge: 'bg-red-100 text-red-700', label: '✗ Rejected', scoreBg: 'bg-red-500', progressBg: 'bg-red-600' },
+                    late: { badge: 'bg-orange-100 text-orange-700', label: '⏰ Late Submission', scoreBg: 'bg-orange-500', progressBg: 'bg-gray-800' }
+                };
+                const config = statusConfig[p.status] || statusConfig.pending;
+                
+                return `
+                    <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl p-4 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white">
+                                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                                </svg>
+                                <p class="text-white text-xs mt-1">PPT</p>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-blue-600 mb-2 font-medium">${p.fileName}</h3>
+                                        <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
+                                            <span class="flex items-center gap-1">🏫 ${p.department}</span>
+                                            <span class="flex items-center gap-1">📄 ${p.slideCount} slides</span>
+                                            <span class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium ${config.badge}">${config.label}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-right">
+                                        ${p.score > 0 ? `<div class="text-2xl px-4 py-2 rounded-xl mb-2 ${config.scoreBg} text-white font-medium">${p.score}%</div>` : '<div class="text-sm text-gray-500 mb-2">Awaiting Review</div>'}
+                                        <p class="text-gray-500 text-sm flex items-center gap-1">📅 ${p.uploadDate}</p>
+                                    </div>
+                                </div>
+                                
+                                ${p.score > 0 ? `
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between text-sm mb-2">
+                                        <span class="text-gray-600">AI Evaluation Score</span>
+                                        <span class="text-gray-900 font-medium">${p.score}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="h-2 rounded-full ${config.progressBg}" style="width: ${p.score}%"></div>
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${p.rejectionReason ? `
+                                <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                    <p class="text-sm text-red-700"><strong>Rejection Reason:</strong> ${p.rejectionReason}</p>
+                                </div>
+                                ` : ''}
+                                
+                                <div class="flex items-center gap-3 flex-wrap">
+                                    ${p.score > 0 ? `
+                                    <button onclick="viewAnalysis('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        View Analysis
+                                    </button>
+                                    ` : ''}
+                                    <button onclick="downloadMyPPT('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border border-gray-300 bg-white hover:bg-gray-50">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                            <path d="M12 18v-6"></path>
+                                            <path d="m9 15 3 3 3-3"></path>
+                                        </svg>
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openUploadModal() {
+            document.getElementById('upload-modal').classList.add('active');
+        }
+
+        async function handleUpload(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('ppt-file');
+            const title = document.getElementById('ppt-title').value;
+            const dept = document.getElementById('ppt-dept').value;
+            const slides = parseInt(document.getElementById('ppt-slides').value);
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a file');
+                return;
+            }
+            
+            const rollNumber = localStorage.getItem('rollNumber') || STUDENT_ROLL;
+            const studentName = localStorage.getItem('userName') || 'Student';
+            
+            const uploadData = {
+                fileName: title + '.pptx',
+                studentName: studentName,
+                rollNumber: rollNumber,
+                department: dept,
+                slideCount: slides
+            };
+            
+            const result = await apiCall('/upload', 'POST', uploadData);
+            if (!result) return;
+            
+            alert('Presentation uploaded successfully! It will be reviewed by your teacher.');
+            closeModal('upload-modal');
+            document.getElementById('ppt-file').value = '';
+            document.getElementById('ppt-title').value = '';
+            document.getElementById('ppt-slides').value = '';
+            loadMyPresentations();
+            loadStudentStats();
+        }
+
+        async function viewAnalysis(id) {
+            const analysis = await apiCall(`/presentations/${id}/analyze`, 'POST');
+            if (!analysis) return;
+            
+            const breakdown = analysis.detailed_breakdown || {};
+            const insights = analysis.ai_insights || [];
+            
+            document.getElementById('analysis-content').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Overall Score -->
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100 text-sm mb-1">SlideSense AI Score</p>
+                                <h2 class="text-4xl font-bold">${analysis.score}%</h2>
+                            </div>
+                            <div class="text-6xl">${analysis.score >= 90 ? '🏆' : analysis.score >= 80 ? '✨' : analysis.score >= 70 ? '👍' : '📈'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Insights -->
+                    ${insights.length > 0 ? `
+                    <div class="bg-purple-50 border border-purple-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                            <span>🤖</span> AI Insights
+                        </h4>
+                        <ul class="space-y-2 text-sm text-purple-800">
+                            ${insights.map(insight => `<li class="flex items-start gap-2"><span>•</span><span>${insight}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Detailed Breakdown -->
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">Detailed Evaluation Breakdown</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Content Quality</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.content_quality || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: ${breakdown.content_quality || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Structure Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.structure_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: ${breakdown.structure_score || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Design Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.design_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-purple-600 h-2 rounded-full" style="width: ${breakdown.design_score || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Clarity Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.clarity_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-orange-600 h-2 rounded-full" style="width: ${breakdown.clarity_score || 0}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Strengths -->
+                    ${analysis.strengths && analysis.strengths.length > 0 ? `
+                    <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                            <span>✅</span> Your Strengths
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.strengths.map(s => `<li class="text-green-800 flex items-start gap-2"><span>✓</span><span>${s}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Areas to Improve -->
+                    ${analysis.weaknesses && analysis.weaknesses.length > 0 ? `
+                    <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-orange-900 mb-3 flex items-center gap-2">
+                            <span>📈</span> Areas to Improve
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.weaknesses.map(w => `<li class="text-orange-800 flex items-start gap-2"><span>•</span><span>${w}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Recommendations -->
+                    ${analysis.recommendations && analysis.recommendations.length > 0 ? `
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                            <span>💡</span> AI Recommendations
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.recommendations.map(r => `<li class="text-blue-800 flex items-start gap-2"><span>→</span><span>${r}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            document.getElementById('analysis-modal').classList.add('active');
+        }
+
+        function downloadMyPPT(id) {
+            alert('Downloading your presentation...');
+            // In real app: window.location.href = `${API_BASE}/presentations/${id}/download`;
+        }
+
+        function viewMySubmissions() {
+            document.getElementById('submissions-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function viewGuidelines() {
+            alert('Submission Guidelines:\n\n1. File format: .pptx or .ppt\n2. Minimum 10 slides required\n3. Include title slide with your name and roll number\n4. Use clear headings and bullet points\n5. Include relevant images and diagrams\n6. Submit before the deadline\n7. File size limit: 50MB');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showHelp() {
+            alert('Student Dashboard Help:\n\n1. Click "Upload New PPT" to submit a presentation\n2. View your submission status and scores\n3. Click "View Analysis" to see detailed AI feedback\n4. Download your submitted presentations\n5. Check guidelines before submitting');
+        }
+    </script>
+</body>
+</html>

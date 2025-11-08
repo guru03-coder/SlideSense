@@ -1,0 +1,129 @@
+{
+  "presentations": [
+    {
+      "id": "1",
+      "fileName": "AI_Machine_Learning_Presentation.pptx",
+      "studentName": "Rahul Kumar",
+      "rollNumber": "21CS001",
+      "department": "CSE",
+      "slideCount": 24,
+      "status": "approved",
+      "score": 92.3,
+      "uploadDate": "11/8/2025 at 10:30 AM",
+      "filePath": "/uploads/1.pptx"
+    },
+    {
+      "id": "2",
+      "fileName": "Power_Systems_Analysis.pptx",
+      "studentName": "Priya Sharma",
+      "rollNumber": "21EE015",
+      "department": "EEE",
+      "slideCount": 18,
+      "status": "pending",
+      "score": 85.5,
+      "uploadDate": "11/8/2025 at 09:15 AM",
+      "filePath": "/uploads/2.pptx"
+    },
+    {
+      "id": "3",
+      "fileName": "Thermodynamics_Project.pptx",
+      "studentName": "Amit Patel",
+      "rollNumber": "21ME023",
+      "department": "MECH",
+      "slideCount": 20,
+      "status": "late",
+      "score": 78.2,
+      "uploadDate": "11/7/2025 at 04:45 PM",
+      "filePath": "/uploads/3.pptx"
+    },
+    {
+      "id": "4",
+      "fileName": "Database_Management_Systems.pptx",
+      "studentName": "Sneha Reddy",
+      "rollNumber": "21CS045",
+      "department": "CSE",
+      "slideCount": 22,
+      "status": "approved",
+      "score": 88.7,
+      "uploadDate": "11/7/2025 at 02:20 PM",
+      "filePath": "/uploads/4.pptx"
+    },
+    {
+      "id": "5",
+      "fileName": "Structural_Engineering.pptx",
+      "studentName": "Vikram Singh",
+      "rollNumber": "21CE012",
+      "department": "CIVIL",
+      "slideCount": 16,
+      "status": "pending",
+      "score": 82.1,
+      "uploadDate": "11/7/2025 at 11:30 AM",
+      "filePath": "/uploads/5.pptx"
+    },
+    {
+      "id": "6",
+      "fileName": "Quantum_Physics_Research.pptx",
+      "studentName": "Anjali Gupta",
+      "rollNumber": "21PH008",
+      "department": "PHYSICS",
+      "slideCount": 28,
+      "status": "approved",
+      "score": 94.5,
+      "uploadDate": "11/6/2025 at 03:15 PM",
+      "filePath": "/uploads/6.pptx"
+    },
+    {
+      "id": "7",
+      "fileName": "medi bridge.pptx",
+      "studentName": "Rahul Kumar",
+      "rollNumber": "21CS001",
+      "department": "CSE",
+      "slideCount": 8,
+      "status": "pending",
+      "score": 79.6,
+      "uploadDate": "11/08/2025 at 04:08 PM",
+      "filePath": "/uploads/7.pptx",
+      "analysis": {
+        "score": 79.6,
+        "factors": {
+          "filename_quality": 80.0,
+          "content_structure": 80.0,
+          "visual_design": 75.0,
+          "completeness": 80.0,
+          "clarity": 80.0,
+          "relevance": 86.2,
+          "slide_count_optimization": 80.0
+        },
+        "recommendations": [
+          "\ud83c\udfa8 Enhance visual design: Use consistent color schemes and professional templates",
+          "\ud83d\udccb Improve structure: Organize content with clear headings, sections, and logical flow",
+          "\ud83d\udca1 Increase clarity: Simplify complex concepts with diagrams and examples",
+          "\ud83d\udcca Add more content: Current 8 slides. Aim for 15-25 slides for comprehensive coverage",
+          "\ud83c\udfaf Improve relevance: Ensure all content directly relates to the main topic",
+          "\u2705 Enhance completeness: Cover all key aspects of the topic comprehensively"
+        ],
+        "strengths": [
+          "Good overall presentation"
+        ],
+        "weaknesses": [
+          "Visual design needs improvement",
+          "Content organization could be better"
+        ],
+        "detailed_breakdown": {
+          "content_quality": 80.0,
+          "structure_score": 80.0,
+          "design_score": 75.0,
+          "clarity_score": 80.0,
+          "relevance_score": 86.2,
+          "filename_quality": 80.0
+        },
+        "ai_insights": [
+          "\ud83d\udc4d Good foundation. Focus on enhancing visual design and content depth for better impact.",
+          "\ud83d\udca1 Consider expanding to 15-20 slides for better topic coverage."
+        ]
+      }
+    }
+  ],
+  "students": [],
+  "notifications": []
+}

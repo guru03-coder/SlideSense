@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlideSense - Staff Dashboard | Sairam College</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 rounded-xl p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white">
+                        <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
+                        <path d="M22 10v6"></path>
+                        <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-gray-900 text-2xl font-medium">SlideSense - Staff Dashboard</h1>
+                    <p class="text-gray-500 text-sm">Sairam College of Engineering</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gray-600 cursor-pointer">
+                        <path d="M10.268 21a2 2 0 0 0 3.464 0"></path>
+                        <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                </div>
+                <button onclick="handleLogout()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 text-gray-600 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                        <path d="m16 17 5-5-5-5"></path>
+                        <path d="M21 12H9"></path>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <!-- Total PPTs -->
+            <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-blue-600 text-sm mb-1">Total PPTs</p>
+                        <p class="text-blue-900 text-4xl font-medium">167</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-xl p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600">
+                            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                            <path d="M10 9H8"></path>
+                            <path d="M16 13H8"></path>
+                            <path d="M16 17H8"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Reviews -->
+            <div class="bg-yellow-50 rounded-2xl p-6 border border-yellow-100">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-yellow-700 text-sm mb-1">Pending Reviews</p>
+                        <p class="text-yellow-900 text-4xl font-medium">24</p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-xl p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-yellow-600">
+                            <path d="M12 6v6l4 2"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approved -->
+            <div class="bg-green-50 rounded-2xl p-6 border border-green-100">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-green-600 text-sm mb-1">Approved</p>
+                        <p class="text-green-900 text-4xl font-medium">132</p>
+                    </div>
+                    <div class="bg-green-100 rounded-xl p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-600">
+                            <path d="M21.801 10A10 10 0 0 1 1 17 3.335"></path>
+                            <path d="m9 11 3 3L22 4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rejected -->
+            <div class="bg-red-50 rounded-2xl p-6 border border-red-100">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-red-600 text-sm mb-1">Rejected</p>
+                        <p class="text-red-900 text-4xl font-medium">11</p>
+                    </div>
+                    <div class="bg-red-100 rounded-xl p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-600">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="m15 9-6 6"></path>
+                            <path d="m9 9 6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Buttons -->
+        <div class="flex gap-4 mb-8">
+            <button id="tab-presentations" class="tab-btn flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-blue-600 text-white shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                    <path d="M10 9H8"></path>
+                    <path d="M16 13H8"></path>
+                    <path d="M16 17H8"></path>
+                </svg>
+                Presentations
+                <span class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium bg-white text-blue-600 ml-2">167</span>
+            </button>
+            <button id="tab-analytics" class="tab-btn flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-white text-gray-600 hover:bg-gray-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M16 7h6v6"></path>
+                    <path d="m22 7-8.5 8.5-5-5L2 17"></path>
+                </svg>
+                Analytics
+            </button>
+            <button id="tab-tracker" class="tab-btn flex items-center gap-2 px-6 py-3 rounded-xl transition-all bg-white text-gray-600 hover:bg-gray-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <path d="M12 11h4"></path>
+                    <path d="M12 16h4"></path>
+                    <path d="M8 11h.01"></path>
+                    <path d="M8 16h.01"></path>
+                </svg>
+                Submission Tracker
+            </button>
+        </div>
+
+        <!-- Main Content Section -->
+        <div>
+            <div class="mb-8">
+                <h2 class="text-gray-900 text-2xl font-medium mb-2">Uploaded Presentations Overview</h2>
+                <p class="text-gray-600">Review, analyze, and manage student presentation submissions</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="bg-white rounded-2xl p-6 mb-6 border border-gray-200">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-2 text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                            <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>
+                        </svg>
+                        <span>Filters & Sorting</span>
+                    </div>
+                    <button id="toggle-filters" class="text-gray-600 text-sm flex items-center gap-2">▲ Hide Filters</button>
+                </div>
+                
+                <div id="filters-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="text-gray-700 text-sm mb-2 block">Search by Student Name or Roll Number</label>
+                        <div class="relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2">
+                                <path d="m21 21-4.34-4.34"></path>
+                                <circle cx="11" cy="11" r="8"></circle>
+                            </svg>
+                            <input type="text" id="search-input" placeholder="Type name or roll number..." class="w-full h-9 rounded-md border border-gray-300 px-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-gray-700 text-sm mb-2 block">Sort By</label>
+                        <button class="border border-gray-300 flex w-full items-center justify-between gap-2 rounded-md bg-white px-3 py-2 text-sm h-9 hover:bg-gray-50">
+                            <span>Upload Date (Newest First)</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 opacity-50">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <label class="text-gray-700 text-sm mb-2 block">Filter by Department</label>
+                        <button class="border border-gray-300 flex w-full items-center justify-between gap-2 rounded-md bg-white px-3 py-2 text-sm h-9 hover:bg-gray-50">
+                            <span>All Departments</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 opacity-50">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <label class="text-gray-700 text-sm mb-2 block">Score Range: 0% - 100%</label>
+                        <div class="mt-2">
+                            <input type="range" min="0" max="100" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <p class="text-gray-600 text-sm">Showing <span id="presentation-count">6</span> of 6 presentations</p>
+                    <button id="reset-filters" class="border border-gray-300 rounded-md text-sm font-medium h-9 px-4 py-2 hover:bg-gray-50">Reset Filters</button>
+                </div>
+            </div>
+
+            <!-- Presentation Cards -->
+            <div id="presentations-list" class="space-y-4">
+                <!-- Presentations loaded dynamically from API -->
+                        </div>
+                    </div>
+                </div>
+
+    <!-- Analysis Modal -->
+    <div id="analysis-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center" style="display: none;">
+        <div class="bg-white rounded-2xl p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-medium">SlideSense AI Analysis Report</h3>
+                <button onclick="closeAnalysisModal()" class="text-gray-500 hover:text-gray-700 text-2xl">✕</button>
+            </div>
+            <div id="analysis-content"></div>
+        </div>
+    </div>
+
+    <!-- Help Button -->
+    <button onclick="showHelp()" class="fixed bottom-8 right-8 bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-800 transition-colors text-xl font-medium">
+        ?
+    </button>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api/staff';
+        
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuthentication();
+            loadStaffStats();
+            loadPresentations();
+        });
+        
+        // API Functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (data) options.body = JSON.stringify(data);
+                
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                if (!response.ok) throw new Error('API request failed');
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return null;
+            }
+        }
+        
+        async function loadStaffStats() {
+            const stats = await apiCall('/stats');
+            if (!stats) return;
+            
+            // Update stats cards
+            document.querySelector('.bg-blue-50 .text-4xl').textContent = stats.total || 0;
+            document.querySelector('.bg-yellow-50 .text-4xl').textContent = stats.pending || 0;
+            document.querySelector('.bg-green-50 .text-4xl').textContent = stats.approved || 0;
+            document.querySelector('.bg-red-50 .text-4xl').textContent = stats.rejected || 0;
+        }
+        
+        async function loadPresentations() {
+            const presentations = await apiCall('/presentations');
+            if (!presentations || presentations.length === 0) {
+                document.getElementById('presentations-list').innerHTML = '<div class="text-center py-12 text-gray-500">No presentations found.</div>';
+                document.getElementById('presentation-count').textContent = '0';
+                return;
+            }
+            
+            const container = document.getElementById('presentations-list');
+            container.innerHTML = presentations.map(p => {
+                const statusConfig = {
+                    approved: { badge: 'bg-green-100 text-green-700', label: '✓ Approved', scoreBg: 'bg-green-500', progressBg: 'bg-green-600' },
+                    pending: { badge: 'bg-yellow-100 text-yellow-700', label: '⏱ Pending', scoreBg: 'bg-blue-500', progressBg: 'bg-blue-600' },
+                    rejected: { badge: 'bg-red-100 text-red-700', label: '✗ Rejected', scoreBg: 'bg-red-500', progressBg: 'bg-red-600' },
+                    late: { badge: 'bg-orange-100 text-orange-700', label: '⏰ Late Submission', scoreBg: 'bg-orange-500', progressBg: 'bg-gray-800' }
+                };
+                const config = statusConfig[p.status] || statusConfig.pending;
+                
+                return `
+                <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-4 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white">
+                                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                            </svg>
+                            <p class="text-white text-xs mt-1">PPT</p>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                        <h3 class="text-blue-600 mb-2 font-medium">${p.fileName}</h3>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
+                                            <span class="flex items-center gap-1">👤 ${p.studentName}</span>
+                                            <span class="flex items-center gap-1">🎓 ${p.rollNumber}</span>
+                                            <span class="flex items-center gap-1">🏫 ${p.department}</span>
+                                            <span class="flex items-center gap-1">📄 ${p.slideCount} slides</span>
+                                            <span class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium ${config.badge}">${config.label}</span>
+                                        </div>
+                                </div>
+                                
+                                <div class="text-right">
+                                        ${p.score > 0 ? `<div class="text-2xl px-4 py-2 rounded-xl mb-2 ${config.scoreBg} text-white font-medium">${p.score}%</div>` : '<div class="text-sm text-gray-500 mb-2">Awaiting Review</div>'}
+                                        <p class="text-gray-500 text-sm flex items-center gap-1">📅 ${p.uploadDate}</p>
+                                    </div>
+                                </div>
+                                
+                                ${p.score > 0 ? `
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="text-gray-600">AI Evaluation Score</span>
+                                        <span class="text-gray-900 font-medium">${p.score}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="h-2 rounded-full ${config.progressBg}" style="width: ${p.score}%"></div>
+                                    </div>
+                                </div>
+                                ` : ''}
+                            
+                            <div class="flex items-center gap-3 flex-wrap">
+                                    ${p.score > 0 ? `
+                                    <button onclick="viewAnalysis('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    View Analysis
+                                </button>
+                                    ` : ''}
+                                    <button onclick="approvePresentation('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border border-green-300 bg-green-50 hover:bg-green-100 text-green-700">
+                                        Approve
+                                    </button>
+                                    <button onclick="rejectPresentation('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border border-red-300 bg-red-50 hover:bg-red-100 text-red-700">
+                                        Reject
+                                </button>
+                                    <button onclick="downloadPresentation('${p.id}')" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border border-gray-300 bg-white hover:bg-gray-50">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                        <path d="M12 18v-6"></path>
+                                        <path d="m9 15 3 3 3-3"></path>
+                                    </svg>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            document.getElementById('presentation-count').textContent = presentations.length;
+        }
+        
+        async function viewAnalysis(presentationId) {
+            const analysis = await apiCall(`/presentations/${presentationId}/analyze`, 'POST');
+            if (!analysis) return;
+            
+            const breakdown = analysis.detailed_breakdown || {};
+            const insights = analysis.ai_insights || [];
+            
+            document.getElementById('analysis-content').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Overall Score -->
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100 text-sm mb-1">SlideSense AI Score</p>
+                                <h2 class="text-4xl font-bold">${analysis.score}%</h2>
+                            </div>
+                            <div class="text-6xl">${analysis.score >= 90 ? '🏆' : analysis.score >= 80 ? '✨' : analysis.score >= 70 ? '👍' : '📈'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Insights -->
+                    ${insights.length > 0 ? `
+                    <div class="bg-purple-50 border border-purple-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                            <span>🤖</span> AI Insights
+                        </h4>
+                        <ul class="space-y-2 text-sm text-purple-800">
+                            ${insights.map(insight => `<li class="flex items-start gap-2"><span>•</span><span>${insight}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Detailed Breakdown -->
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">Detailed Evaluation Breakdown</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Content Quality</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.content_quality || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: ${breakdown.content_quality || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Structure Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.structure_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: ${breakdown.structure_score || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Design Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.design_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-purple-600 h-2 rounded-full" style="width: ${breakdown.design_score || 0}%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-1">Clarity Score</p>
+                                <p class="text-2xl font-bold text-gray-900">${breakdown.clarity_score || 0}%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-orange-600 h-2 rounded-full" style="width: ${breakdown.clarity_score || 0}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Strengths -->
+                    ${analysis.strengths && analysis.strengths.length > 0 ? `
+                    <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                            <span>✅</span> Strengths
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.strengths.map(s => `<li class="text-green-800 flex items-start gap-2"><span>✓</span><span>${s}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Areas to Improve -->
+                    ${analysis.weaknesses && analysis.weaknesses.length > 0 ? `
+                    <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-orange-900 mb-3 flex items-center gap-2">
+                            <span>📈</span> Areas to Improve
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.weaknesses.map(w => `<li class="text-orange-800 flex items-start gap-2"><span>•</span><span>${w}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Recommendations -->
+                    ${analysis.recommendations && analysis.recommendations.length > 0 ? `
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                            <span>💡</span> AI Recommendations
+                        </h4>
+                        <ul class="space-y-2">
+                            ${analysis.recommendations.map(r => `<li class="text-blue-800 flex items-start gap-2"><span>→</span><span>${r}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            document.getElementById('analysis-modal').style.display = 'flex';
+        }
+        
+        function closeAnalysisModal() {
+            document.getElementById('analysis-modal').style.display = 'none';
+        }
+        
+        function showHelp() {
+            alert('Staff Dashboard Help:\n\n1. View all student presentations\n2. Click "View Analysis" to see detailed AI evaluation\n3. Use "Approve" or "Reject" to update submission status\n4. Filter by department, status, or score range\n5. Download presentations for review');
+        }
+        
+        async function approvePresentation(presentationId) {
+            const result = await apiCall(`/presentations/${presentationId}/approve`, 'POST');
+            if (result && result.success) {
+                alert('Presentation approved successfully!');
+                loadPresentations();
+                loadStaffStats();
+            }
+        }
+        
+        async function rejectPresentation(presentationId) {
+            const reason = prompt('Enter rejection reason:');
+            if (!reason) return;
+            
+            const result = await apiCall(`/presentations/${presentationId}/reject`, 'POST', { reason });
+            if (result && result.success) {
+                alert('Presentation rejected.');
+                loadPresentations();
+                loadStaffStats();
+            }
+        }
+        
+        async function downloadPresentation(presentationId) {
+            const result = await apiCall(`/presentations/${presentationId}/download`);
+            if (result && result.success) {
+                alert(`Download: ${result.fileName}`);
+                // In production: window.location.href = result.filePath;
+            }
+        }
+
+        function checkAuthentication() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated');
+            const userType = localStorage.getItem('userType');
+            
+            if (isAuthenticated !== 'true' || userType !== 'staff') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Display user name if available
+            const userName = localStorage.getItem('userName');
+            if (userName) {
+                const headerTitle = document.querySelector('header h1');
+                if (headerTitle) {
+                    headerTitle.textContent = `Teacher Dashboard - ${userName}`;
+                }
+            }
+        }
+
+        // Logout functionality
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Update logout button
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.querySelector('button:has(svg)');
+            if (logoutBtn && logoutBtn.textContent.includes('Logout')) {
+                logoutBtn.onclick = handleLogout;
+            }
+        });
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white', 'shadow-lg');
+                    b.classList.add('bg-white', 'text-gray-600');
+                });
+                this.classList.remove('bg-white', 'text-gray-600');
+                this.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
+            });
+        });
+
+        // Filter toggle
+        document.getElementById('toggle-filters').addEventListener('click', function() {
+            const filtersContent = document.getElementById('filters-content');
+            const isHidden = filtersContent.style.display === 'none';
+            filtersContent.style.display = isHidden ? 'grid' : 'none';
+            this.textContent = isHidden ? '▲ Hide Filters' : '▼ Show Filters';
+        });
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('#presentations-list > div');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('presentation-count').textContent = visibleCount;
+        });
+
+        // Reset filters
+        document.getElementById('reset-filters').addEventListener('click', function() {
+            document.getElementById('search-input').value = '';
+            loadPresentations(); // Reload all presentations
+        });
+    </script>
+</body>
+</html>
