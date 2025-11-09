@@ -3,6 +3,8 @@
 ## Overview
 A comprehensive document tracking system for managing PPT submissions with AI-powered analysis. The system supports both staff and student dashboards with real-time analytics and ML-based evaluation.
 
+https://guru03-coder.github.io/SlideSense/
+
 ## Project Structure
 ```
 Devf/
